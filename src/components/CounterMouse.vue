@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { reactive, ref, computed } from '@vue/composition-api'
+import { reactive, ref, computed, watch } from '@vue/composition-api'
 export default {
   props: { 
     times: {
@@ -41,6 +41,12 @@ export default {
       return count.value * props.times // setup呼び出し時のpropsを使う。thisは使えない
     })
 
+    watch(count, () => { // count の値が変わったら...→コールバック関数
+      setTimeout(()=>{
+        alert('3秒後')
+      }, 3000)
+    }) // 第三引数{ lazy: true }でリロードしても表示されない
+
 
     // テンプレートで使うものは全てreturnする
     return {
@@ -62,13 +68,13 @@ export default {
   //     return this.count * this.times
   //   }
   // },
-  watch:{
-    count(){
-      setTimeout(()=>{
-        alert('3秒後')
-      }, 3000)
-    }
-  },
+  // watch:{
+  //   count(){
+  //     setTimeout(()=>{
+  //       alert('3秒後')
+  //     }, 3000)
+  //   }
+  // },
   // methods: {
   //   incrementCount(){
   //     this.count ++
