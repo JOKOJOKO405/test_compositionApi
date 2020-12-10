@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { reactive, ref } from '@vue/composition-api'
+import { reactive, ref, computed } from '@vue/composition-api'
 export default {
   props: { 
     times: {
@@ -17,26 +17,38 @@ export default {
       default: 2
     }
   },
-  setup(){
+  // 第一引数にpropsが取れる
+  setup(props){
     const mousePos = reactive({
+      //reactiveはobjectしか入れられない
       x: 0,
       y: 0
     })
-    let count = ref(0)
 
+    let count = ref(0) // 書き換えるからlet
+
+    // methods内でrefの値を使う時は.valueをつける
+    // テンプレート内では.valueはいらない
     const incrementCount = () => {
       count.value ++
     }
-    const updateMouse= (e) => {
+    const updateMouse = (e) => {
       mousePos.x = e.clientX
       mousePos.y = e.clientY
     }
 
+    const multipleResult = computed(() => {
+      return count.value * props.times // setup呼び出し時のpropsを使う。thisは使えない
+    })
+
+
+    // テンプレートで使うものは全てreturnする
     return {
       mousePos,
       count,
       incrementCount,
       updateMouse,
+      multipleResult,
     }
   },
   // data() {
@@ -45,11 +57,11 @@ export default {
   //     count: 0,
   //   }
   // },
-  computed: { 
-    multipleResult(){
-      return this.count * this.times
-    }
-  },
+  // computed: { 
+  //   multipleResult(){
+  //     return this.count * this.times
+  //   }
+  // },
   watch:{
     count(){
       setTimeout(()=>{
