@@ -9,7 +9,9 @@
 </template>
 
 <script>
-import { reactive, ref, computed, watch } from '@vue/composition-api'
+import { ref, computed, watch } from '@vue/composition-api'
+// 再利用できるよう関数をまとめたファイル↓↓
+import { usePosition } from '../util-functions/position'
 export default {
   props: { 
     times: {
@@ -19,11 +21,11 @@ export default {
   },
   // 第一引数にpropsが取れる
   setup(props){
-    const mousePos = reactive({
-      //reactiveはobjectしか入れられない
-      x: 0,
-      y: 0
-    })
+
+    /* -------------------------------- 
+    ①関数や定義を機能ごとにまとめられる（カウント系）
+    →今まではオプションごとにまとめていた
+    --------------------------------*/ 
 
     let count = ref(0) // 書き換えるからlet
 
@@ -31,10 +33,6 @@ export default {
     // テンプレート内では.valueはいらない
     const incrementCount = () => {
       count.value ++
-    }
-    const updateMouse = (e) => {
-      mousePos.x = e.clientX
-      mousePos.y = e.clientY
     }
 
     const multipleResult = computed(() => {
@@ -46,6 +44,15 @@ export default {
         alert('3秒後')
       }, 3000)
     }) // 第三引数{ lazy: true }でリロードしても表示されない
+
+
+    /* -------------------------------- 
+    ①関数や定義を機能ごとにまとめられる（マウスムーブ系）
+    --------------------------------*/ 
+    /* -------------------------------- 
+    ②再利用性を高める→名前のコンフリクトが起こらない
+    --------------------------------*/ 
+    const { position: mousePos, updatePosition: updateMouse } = usePosition()
 
 
     // テンプレートで使うものは全てreturnする
