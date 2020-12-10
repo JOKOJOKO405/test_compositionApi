@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { reactive, ref } from '@vue/composition-api'
 export default {
   props: { 
     times: {
@@ -16,12 +17,34 @@ export default {
       default: 2
     }
   },
-  data() {
+  setup(){
+    const mousePos = reactive({
+      x: 0,
+      y: 0
+    })
+    let count = ref(0)
+
+    const incrementCount = () => {
+      count.value ++
+    }
+    const updateMouse= (e) => {
+      mousePos.x = e.clientX
+      mousePos.y = e.clientY
+    }
+
     return {
-      mousePos: { x: 0, y: 0 },
-      count: 0,
+      mousePos,
+      count,
+      incrementCount,
+      updateMouse,
     }
   },
+  // data() {
+  //   return {
+  //     mousePos: { x: 0, y: 0 },
+  //     count: 0,
+  //   }
+  // },
   computed: { 
     multipleResult(){
       return this.count * this.times
@@ -34,14 +57,14 @@ export default {
       }, 3000)
     }
   },
-  methods: {
-    incrementCount(){
-      this.count ++
-    },
-    updateMouse(e){
-      this.mousePos.x = e.clientX
-      this.mousePos.y = e.clientY
-    }
-  }
+  // methods: {
+  //   incrementCount(){
+  //     this.count ++
+  //   },
+  //   updateMouse(e){
+  //     this.mousePos.x = e.clientX
+  //     this.mousePos.y = e.clientY
+  //   }
+  // }
 }
 </script>
